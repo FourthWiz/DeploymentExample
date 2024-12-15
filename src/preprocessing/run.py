@@ -5,25 +5,35 @@ This script download a URL to a local destination
 import argparse
 import logging
 import os
+import requests
+from utils.move_extract import extract
+from utils.preprocess import preprocess_data
+
 import wandb
-from utils.download import download
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)-15s %(message)s")
 logger = logging.getLogger()
 
 
 def go(args):
-
-    run = wandb.init(job_type="download_file")
-    run.config.update(args)
-    data = download()
-
-    if not os.path.exists("data"):
-        os.makedirs("data")
     
-    data.to_csv(os.path.join(os.getcwd(), "data", args.sample), index=False)
+    run = wandb.init(job_type="preprocess_data")
+    run.config.update(args)
 
-    logger.info(f"Returning sample {args.sample}")
+    logger.info(f"Downloading artifact {args.filename}")
+
+    artifact = run.use_artifact(args.filename + ":latest")
+    artifact_dir = artifact.download()
+
+    #logger.info("Extracting artifact")
+
+    #extract(artifact_dir, args.dataset)
+
+    logger.info(f"Preprocessing data")
+
+    data = preprocess_data(os.path.join(artifact_dir, args.filename))
+    data.to_csv('dataset.csv')
+
     logger.info(f"Uploading {args.artifact_name} to Weights & Biases")
     
     artifact = wandb.Artifact(
@@ -31,7 +41,7 @@ def go(args):
         type=args.artifact_type,
         description=args.artifact_description,
     )
-    artifact.add_file(os.path.join(os.getcwd(), "data", args.sample))
+    artifact.add_file(os.path.join(os.getcwd(), "dataset.csv"))
     artifact.save()
     artifact.wait()
 
@@ -40,7 +50,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="Download URL to a local destination")
 
-    parser.add_argument("sample", type=str, help="Name of the sample to download")
+    parser.add_argument("filename", type=str, help="File location in the archive")
 
     parser.add_argument("artifact_name", type=str, help="Name for the output artifact")
 

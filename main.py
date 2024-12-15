@@ -7,9 +7,12 @@ import os
 import wandb
 import hydra
 from omegaconf import DictConfig
+from utils import move_extract
 
 _steps = [
-    "dataload"
+    "dataload", 
+    "data_move_extract",
+    "preprocessing"
 ]
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)-15s %(message)s")
@@ -36,13 +39,35 @@ def go(config: DictConfig):
                 "main",
                 env_manager="virtualenv",
                 parameters={
-                    "url": config["main"]["url"],
                     "sample": config["dataload"]["filename"],
-                    "artifact_name": "census.zip",
+                    "artifact_name": "census.csv",
                     "artifact_type": "raw_data",
                     "artifact_description": "Raw file as downloaded"
                 },
             )
+    if "data_move_extract" in active_steps:
+        logger.info("Moving data and extracting")
+        # Move data to the correct location and extract it
+        move_extract.move_extract(
+            os.path.join(hydra.utils.get_original_cwd(), "src", "dataload", "data", config["dataload"]["filename"]),
+            os.path.join(hydra.utils.get_original_cwd(), "data")
+        )
+    if "preprocessing" in active_steps:
+        logger.info("Extracting and perprocessing data")
+
+        _ = mlflow.run(
+                os.path.join(hydra.utils.get_original_cwd(), "src", "preprocessing"),
+                "main",
+                env_manager="virtualenv",
+                parameters={
+                    "filename": config["preprocessing"]["filename"],
+                    "artifact_name": "census.csv",
+                    "artifact_type": "data",
+                    "artifact_description": "Preprocessed data"
+                },
+            )
+
+            
 
 if __name__ == "__main__":
     go()

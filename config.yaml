@@ -3,6 +3,7 @@ main:
   project_name: deployed_model
   experiment_name: development
   steps: all
-  url: https://archive.ics.uci.edu/static/public/20/census+income.zip
 dataload:
-  filename: census.zip
+  filename: census.csv
+preprocessing:
+  filename: census.csv
