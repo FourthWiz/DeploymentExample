@@ -5,6 +5,14 @@ This module contains a function that moves a file from the source to the destina
 import os
 import zipfile
 
+
+def move(source, destination):
+    """
+    This function moves a file from the source to the destination.
+    """
+    # Move the file
+    os.rename(source, destination)
+
 def move_extract(source, destination):
     """
     This function moves a file from the source to the destination and extracts it.

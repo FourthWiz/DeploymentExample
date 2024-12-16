@@ -32,7 +32,7 @@ def go(args):
     logger.info(f"Preprocessing data")
 
     data = preprocess_data(os.path.join(artifact_dir, args.filename))
-    data.to_csv('dataset.csv')
+    data.to_csv('dataset.csv', index=False)
 
     logger.info(f"Uploading {args.artifact_name} to Weights & Biases")
     

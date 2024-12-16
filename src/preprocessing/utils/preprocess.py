@@ -40,8 +40,10 @@ def preprocess_data(path):
     for col in TEXT_COLUMNS:
         df = process_text_column(df, col)
 
-    df = process_text_column(df, 'salary')
-    df.loc[:, 'salary'] = df['salary'].astype(int)
+    df = process_text_column(df, 'income')
+    df.loc[df['income'].str.contains('<=50K'), 'income'] = '0'
+    df.loc[df['income'].str.contains('>50K'), 'income'] = '1'
+    df.loc[:, 'income'] = df['income'].astype(int)
     df.drop_duplicates(inplace=True)
 
     return df

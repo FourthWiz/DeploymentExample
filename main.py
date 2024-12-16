@@ -10,9 +10,10 @@ from omegaconf import DictConfig
 from utils import move_extract
 
 _steps = [
-    "dataload", 
-    "data_move_extract",
-    "preprocessing"
+    #"dataload", 
+    #"data_move_extract",
+    "preprocessing",
+    "modelling"
 ]
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)-15s %(message)s")
@@ -48,9 +49,9 @@ def go(config: DictConfig):
     if "data_move_extract" in active_steps:
         logger.info("Moving data and extracting")
         # Move data to the correct location and extract it
-        move_extract.move_extract(
+        move_extract.move(
             os.path.join(hydra.utils.get_original_cwd(), "src", "dataload", "data", config["dataload"]["filename"]),
-            os.path.join(hydra.utils.get_original_cwd(), "data")
+            os.path.join(hydra.utils.get_original_cwd(), "src", "eda", config["dataload"]["filename"])
         )
     if "preprocessing" in active_steps:
         logger.info("Extracting and perprocessing data")
@@ -61,9 +62,20 @@ def go(config: DictConfig):
                 env_manager="virtualenv",
                 parameters={
                     "filename": config["preprocessing"]["filename"],
-                    "artifact_name": "census.csv",
+                    "artifact_name": "dataset.csv",
                     "artifact_type": "data",
                     "artifact_description": "Preprocessed data"
+                },
+            )
+    if "modelling" in active_steps:
+        logger.info("Training model")
+        _ = mlflow.run(
+                os.path.join(hydra.utils.get_original_cwd(), "src", "modelling"),
+                "main",
+                env_manager="virtualenv",
+                parameters={
+                    "dataset": config["modelling"]["dataset"],
+                    "artifact_name": "model.pkl",
                 },
             )
 
