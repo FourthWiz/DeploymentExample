@@ -1,37 +1,36 @@
 import lightgbm as lgb
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import roc_auc_score, plot_precision_recall_curve
+from sklearn.metrics import roc_auc_score, PrecisionRecallDisplay
 from sklearn.preprocessing import LabelEncoder
 import pandas as pd
 import matplotlib.pyplot as plt
-
-TEXT_COLUMNS = [
-    "native-country",
-    "sex",
-    "relationship",
-    "occupation",
-    "education",
-    "workclass",
-    "marital-status",
-    "race"
-]
 
 class ModelLGB:
     """
     Class for the LightGBM model.
     """
 
-    def __init__(self, data: pd.DataFrame, categorical_columns: list = []):
+    def __init__(self, data: pd.DataFrame):
         """
         Constructor for the LightGBM model.
         """
-        self.data = data
-        self.categorical_columns = categorical_columns
+        self.data = data.copy()
+        self.categorical_columns = [
+                "native-country",
+                "sex",
+                "relationship",
+                "occupation",
+                "education",
+                "workclass",
+                "marital-status",
+                "race"
+            ]
         self.model = None
         self.roc_auc = None
         self.x_test = None
         self.y_test = None
         self.label_encoders = self._preprocess()
+
 
     def _preprocess(self):
         label_encoders = {}
@@ -39,6 +38,9 @@ class ModelLGB:
             le = LabelEncoder()
             self.data.loc[:, col] = le.fit_transform(self.data[col])
             label_encoders[col] = le
+        for col in self.data.columns:
+            if self.data[col].dtype == 'object':
+                self.data[col] = self.data[col].astype('int')
         return label_encoders
         
 
@@ -62,7 +64,7 @@ class ModelLGB:
         y_pred_proba = self.model.predict_proba(self.x_test)[:, 1]
 
         self.roc_auc = roc_auc_score(self.y_test, y_pred_proba)
-        plot_precision_recall_curve(self.model, self.x_test, self.y_test)
+        PrecisionRecallDisplay.from_estimator(self.model, self.x_test, self.y_test)
         plt.savefig(plot_name)
 
 

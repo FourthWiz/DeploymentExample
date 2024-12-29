@@ -7,7 +7,7 @@ import logging
 import os
 import requests
 import pickle
-from utils.model import ModelLGB, TEXT_COLUMNS
+from utils.model import ModelLGB
 import pandas as pd
 import json
 
@@ -30,7 +30,7 @@ def go(args):
     data = pd.read_csv(os.path.join(artifact_dir, args.dataset))
 
     logger.info(f"Initializing model")
-    model = ModelLGB(data, TEXT_COLUMNS)
+    model = ModelLGB(data)
 
     logger.info(f"Training model and getting metrics")
     model.train_first()

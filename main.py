@@ -13,7 +13,8 @@ _steps = [
     #"dataload", 
     #"data_move_extract",
     "preprocessing",
-    "modelling"
+    "modelling",
+    "serving"
 ]
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)-15s %(message)s")
@@ -77,6 +78,16 @@ def go(config: DictConfig):
                     "dataset": config["modelling"]["dataset"],
                     "artifact_name": "model.pkl",
                 },
+            )
+    if "serving" in active_steps:
+        logger.info("Starting serving")
+        _ = mlflow.run(
+                os.path.join(hydra.utils.get_original_cwd(), "src", "serving"),
+                "main",
+                env_manager="virtualenv",
+                #parameters={
+                #    "model_path": "model.pkl",
+                #},
             )
 
             
