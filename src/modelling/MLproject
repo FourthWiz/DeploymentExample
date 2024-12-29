@@ -1,0 +1,16 @@
+name: modelling
+
+python_env: python_env.yaml
+
+entry_points:
+  main:
+    parameters:
+      dataset:
+        description: Dataset for modelling
+        type: string
+
+      artifact_name:
+        description: Name for the output artifact
+        type: string
+
+    command: "python run.py {dataset} {artifact_name}"

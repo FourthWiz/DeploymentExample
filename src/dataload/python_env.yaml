@@ -1,0 +1,7 @@
+# Python version required to run the project.
+python: "3.8.18"
+# Dependencies required to run the project.
+dependencies:
+  - mlflow==2.17.2
+  - wandb==0.18.7
+  - ucimlrepo==0.0.7

@@ -1,0 +1,11 @@
+main:
+  components_repository: null
+  project_name: deployed_model
+  experiment_name: development
+  steps: all
+dataload:
+  filename: census.csv
+preprocessing:
+  filename: census.csv
+modelling:
+  dataset: dataset.csv

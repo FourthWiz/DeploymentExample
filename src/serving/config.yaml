@@ -1,0 +1,3 @@
+project_name: deployed_model
+experiment_name: development
+model_path: "ivan-gorban-individual/deployed_model/model.pkl:latest"

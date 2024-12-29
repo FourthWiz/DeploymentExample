@@ -1,0 +1,8 @@
+main:
+  components_repository: null
+  project_name: deployed_model
+  experiment_name: development
+  steps: all
+  url: https://archive.ics.uci.edu/static/public/20/census+income.zip
+dataload:
+  filename: census.zip
