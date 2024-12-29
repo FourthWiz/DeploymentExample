@@ -4,3 +4,6 @@ data/
 mlruns/
 wandb/
 outputs/
+__pycache__/
+outputs/
+artifacts/
