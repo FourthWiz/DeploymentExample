@@ -24,7 +24,11 @@ logger = logging.getLogger()
 def go(config: DictConfig):
 
     # Setup the wandb experiment. All runs will be grouped under this name
-    wandb_api_key = os.environ["WANDB_API_KEY"]
+    try:
+        wandb_api_key = os.environ["WANDB_API_KEY"]
+    except KeyError:
+        wandb_api_key = None
+        pass
 
     if wandb_api_key:
         wandb.login(key=wandb_api_key)
