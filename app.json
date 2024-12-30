@@ -2,12 +2,12 @@
     "name": "Deployment app",
     "description": "A Python app with Heroku CI setup",
     "scripts": {
-      "test": "pytest"
+      "test": "mlflow run . --no-conda && pytest"
     },
     "environments": {
       "test": {
         "scripts": {
-          "test": "pytest"
+          "test": "mlflow run . --no-conda && pytest"
         }
       }
     }
