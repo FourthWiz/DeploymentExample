@@ -1,3 +1,2 @@
-release: mlflow run .
-test: pytest
-web: gunicorn src.serving.run:app -k uvicorn.workers.UvicornWorker
+test: mlflow run . --no-conda && pytest
+web: gunicorn src.serving.run:app -w 1 -k uvicorn.workers.UvicornWorker
