@@ -3,7 +3,6 @@ data/
 .DS_Store
 mlruns/
 wandb/
-outputs/
-__pycache__/
-outputs/
-artifacts/
+outputs
+__pycache__
+artifacts
