@@ -183,7 +183,7 @@ logging.info("Initializing Config")
 with initialize(config_path=".", version_base="1.2"):
     config = compose(config_name="config.yaml")
 
-wandb_api_key = os.getenv("WANDB_API_KEY")
+wandb_api_key = os.environ["WANDB_API_KEY"]
 
 if wandb_api_key:
     wandb.login(key=wandb_api_key)
