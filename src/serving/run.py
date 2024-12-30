@@ -183,6 +183,14 @@ logging.info("Initializing Config")
 with initialize(config_path=".", version_base="1.2"):
     config = compose(config_name="config.yaml")
 
+wandb_api_key = os.getenv("WANDB_API_KEY")
+
+if wandb_api_key:
+    wandb.login(key=wandb_api_key)
+    print("wandb initialized successfully.")
+else:
+    print("WANDB_API_KEY is not set. wandb will not be initialized.")
+
 os.environ["WANDB_PROJECT"] = config["project_name"]
 os.environ["WANDB_RUN_GROUP"] = config["experiment_name"]
 
