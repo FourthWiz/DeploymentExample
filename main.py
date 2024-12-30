@@ -10,7 +10,7 @@ from omegaconf import DictConfig
 from utils import move_extract
 
 _steps = [
-    #"dataload", 
+    "dataload", 
     #"data_move_extract",
     "preprocessing",
     "modelling",
@@ -24,6 +24,14 @@ logger = logging.getLogger()
 def go(config: DictConfig):
 
     # Setup the wandb experiment. All runs will be grouped under this name
+    wandb_api_key = os.getenv("WANDB_API_KEY")
+
+    if wandb_api_key:
+        wandb.login(key=wandb_api_key)
+        print("wandb initialized successfully.")
+    else:
+        print("WANDB_API_KEY is not set. wandb will not be initialized.")
+
     os.environ["WANDB_PROJECT"] = config["main"]["project_name"]
     os.environ["WANDB_RUN_GROUP"] = config["main"]["experiment_name"]
 
