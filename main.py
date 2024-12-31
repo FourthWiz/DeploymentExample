@@ -14,7 +14,7 @@ _steps = [
     #"data_move_extract",
     "preprocessing",
     "modelling",
-    "serving"
+    #"serving"
 ]
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)-15s %(message)s")
@@ -51,7 +51,7 @@ def go(config: DictConfig):
             _ = mlflow.run(
                 os.path.join(hydra.utils.get_original_cwd(), "src", "dataload"),
                 "main",
-                env_manager="virtualenv",
+                env_manager="local",#"virtualenv",
                 parameters={
                     "sample": config["dataload"]["filename"],
                     "artifact_name": "census.csv",
@@ -72,7 +72,7 @@ def go(config: DictConfig):
         _ = mlflow.run(
                 os.path.join(hydra.utils.get_original_cwd(), "src", "preprocessing"),
                 "main",
-                env_manager="virtualenv",
+                env_manager="local",#"virtualenv",
                 parameters={
                     "filename": config["preprocessing"]["filename"],
                     "artifact_name": "dataset.csv",
@@ -85,7 +85,7 @@ def go(config: DictConfig):
         _ = mlflow.run(
                 os.path.join(hydra.utils.get_original_cwd(), "src", "modelling"),
                 "main",
-                env_manager="virtualenv",
+                env_manager="local",#"virtualenv",
                 parameters={
                     "dataset": config["modelling"]["dataset"],
                     "artifact_name": "model.pkl",
@@ -96,7 +96,7 @@ def go(config: DictConfig):
         _ = mlflow.run(
                 os.path.join(hydra.utils.get_original_cwd(), "src", "serving"),
                 "main",
-                env_manager="virtualenv",
+                env_manager="local",#"virtualenv",
                 #parameters={
                 #    "model_path": "model.pkl",
                 #},
