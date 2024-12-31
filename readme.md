@@ -1,0 +1,1 @@
+An example of deployment of a simple classification model on Heroku with CI/CD. Automated development using mlflow and wnb.
